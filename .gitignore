@@ -1,0 +1,5 @@
+.DS_Store
+.nova/
+.claude/
+*.pdf
+node_modules/

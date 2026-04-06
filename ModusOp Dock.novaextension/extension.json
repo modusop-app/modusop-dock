@@ -1,0 +1,216 @@
+{
+  "identifier": "app.modusop.dock",
+  "name": "ModusOp Dock",
+  "organization": "ModusOp",
+  "description": "Global multi-repo manager sidebar for Nova. Browse GitHub repos, check git status, and clone or open projects.",
+  "version": "1.0.0",
+  "categories": ["sidebars"],
+  "license": "MIT",
+  "homepage": "https://modusop.app/extensions/nova-dock",
+  "bugs": "https://modusop.app/extensions/nova-dock/issues",
+  "main": "main.js",
+
+  "activationEvents": ["*"],
+
+  "entitlements": {
+    "requests": true,
+    "process": true,
+    "filesystem": "readwrite",
+    "credentials": true
+  },
+
+  "config": [
+    {
+      "key": "modusop.dock.githubUsername",
+      "title": "GitHub Username",
+      "description": "GitHub username or organization.",
+      "type": "string",
+      "placeholder": "username"
+    },
+    {
+      "key": "modusop.dock.localReposRoot",
+      "title": "Local Repos Root",
+      "description": "Root directory where your repos live.",
+      "type": "path",
+      "allowFolders": true,
+      "allowFiles": false,
+      "placeholder": "~/Sites"
+    },
+    {
+      "key": "modusop.dock.autoFetch",
+      "title": "Auto Fetch on Refresh",
+      "description": "Run git fetch before checking ahead/behind status. Slower but shows accurate push/pull counts.",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "title": "Settings Backup",
+      "type": "separator"
+    },
+    {
+      "key": "modusop.dock.settingsRepoName",
+      "title": "Backup Repo Name",
+      "description": "Name of the private GitHub repo for Nova settings backup.",
+      "type": "string",
+      "default": "nova-settings",
+      "placeholder": "nova-settings"
+    },
+    {
+      "key": "modusop.dock.syncOnActivate",
+      "title": "Sync Settings on Launch",
+      "description": "Automatically sync Nova settings when Dock activates.",
+      "type": "boolean",
+      "default": false
+    }
+  ],
+
+  "sidebars": [
+    {
+      "id": "modusop.dock.sidebar",
+      "name": "ModusOp Dock",
+      "smallImage": "sidebar-small",
+      "smallSelectedImage": "sidebar-small",
+      "largeImage": "sidebar-large",
+      "largeSelectedImage": "sidebar-large",
+      "sections": [
+        {
+          "id": "modusop.dock.local",
+          "name": "Local",
+          "allowMultiple": true,
+          "placeholderText": "No repos found. Configure your repos root in preferences.",
+          "headerCommands": [
+            {
+              "title": "New Folder",
+              "image": "__builtin.path",
+              "command": "modusop.dock.newFolder"
+            },
+            {
+              "title": "Refresh",
+              "image": "__builtin.refresh",
+              "command": "modusop.dock.refresh"
+            }
+          ],
+          "contextCommands": [
+            {
+              "title": "Open in Nova",
+              "command": "modusop.dock.openRepo",
+              "when": "viewItem == 'local'"
+            },
+            {
+              "title": "Pull",
+              "command": "modusop.dock.pull",
+              "when": "viewItem == 'local'"
+            },
+            {
+              "title": "Push",
+              "command": "modusop.dock.push",
+              "when": "viewItem == 'local'"
+            },
+            {
+              "title": "Move to Folder...",
+              "command": "modusop.dock.moveToFolder",
+              "when": "viewItem == 'local'"
+            },
+            {
+              "title": "Open in GitHub",
+              "command": "modusop.dock.openInGitHub",
+              "when": "viewItem == 'local'"
+            },
+            {
+              "title": "Rename Folder",
+              "command": "modusop.dock.renameFolder",
+              "when": "viewItem == 'folder'"
+            },
+            {
+              "title": "Delete Folder",
+              "command": "modusop.dock.deleteFolder",
+              "when": "viewItem == 'folder'"
+            }
+          ]
+        },
+        {
+          "id": "modusop.dock.github",
+          "name": "GitHub",
+          "placeholderText": "All repos cloned locally, or set your GitHub token via Extensions → ModusOp Dock → Set GitHub Token.",
+          "headerCommands": [
+            {
+              "title": "Search",
+              "image": "__builtin.search",
+              "command": "modusop.dock.filterGitHub"
+            },
+            {
+              "title": "Refresh",
+              "image": "__builtin.refresh",
+              "command": "modusop.dock.refreshGitHub"
+            }
+          ],
+          "contextCommands": [
+            {
+              "title": "Clone",
+              "command": "modusop.dock.cloneRepo",
+              "when": "viewItem == 'github'"
+            },
+            {
+              "title": "Open in GitHub",
+              "command": "modusop.dock.openInGitHub",
+              "when": "viewItem == 'github'"
+            }
+          ]
+        },
+        {
+          "id": "modusop.dock.settings",
+          "name": "Settings Backup",
+          "placeholderText": "Configure GitHub token to enable settings backup.",
+          "headerCommands": [
+            {
+              "title": "Sync Now",
+              "image": "__builtin.refresh",
+              "command": "modusop.dock.syncSettings"
+            }
+          ],
+          "contextCommands": [
+            {
+              "title": "Sync Now",
+              "command": "modusop.dock.syncSettings",
+              "when": "viewItem == 'settings-status'"
+            },
+            {
+              "title": "Restore from Backup",
+              "command": "modusop.dock.restoreSettings",
+              "when": "viewItem == 'settings-status'"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "commands": {
+    "extensions": [
+      {
+        "title": "Set GitHub Token...",
+        "command": "modusop.dock.setToken"
+      },
+      {
+        "title": "Refresh All",
+        "command": "modusop.dock.refresh"
+      },
+      {
+        "title": "Refresh GitHub Repos",
+        "command": "modusop.dock.refreshGitHub"
+      },
+      {
+        "title": "Search GitHub Repos",
+        "command": "modusop.dock.filterGitHub"
+      },
+      {
+        "title": "Sync Nova Settings",
+        "command": "modusop.dock.syncSettings"
+      },
+      {
+        "title": "Restore Nova Settings",
+        "command": "modusop.dock.restoreSettings"
+      }
+    ]
+  }
+}
